@@ -1,1 +1,2 @@
 This is simon changes.
+Simon is doing the changes in the same file for conflict.
