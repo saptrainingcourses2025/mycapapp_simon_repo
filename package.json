@@ -1,0 +1,86 @@
+{
+  "name": "mycapapp",
+  "version": "1.0.0",
+  "description": "A Simple CAP Project",
+  "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.16.1",
+    "@cap-js/hana": "^3",
+    "@sap/cds": "^10.1.1",
+    "express": "^5.2.1",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^3.1.1",
+    "@sap/cds-dk": "^10",
+    "cds-plugin-ui5": "^0.17.0"
+  },
+  "keywords": [
+    "Nodejs",
+    "js",
+    "cap"
+  ],
+  "license": "ISC",
+  "author": "Tyson",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "cds-serve",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-managepo": "cds watch --open tyson.ui.managepo/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "private": true,
+  "workspaces": [
+    "app/*"
+  ],
+  "sapux": [
+    "app/managepo"
+  ],
+  "cds": {
+    "requires": {
+      "db": {
+        "[development]": {
+          "kind": "sqlite",
+          "credentials": {
+            "url": "db.sqlite"
+          }
+        },
+        "[production]": {
+          "kind": "hana"
+        }
+      },
+      "auth": {
+        "[development]": {
+          "kind": "mocked",
+          "users": {
+            "tyson": {
+              "password": "Welcome1",
+              "roles": [
+                "Viewer"
+              ],
+              "attr": {
+                "bankNameFilter": [
+                  "My Bank of San Francisco",
+                  "My Bank of London"
+                ]
+              }
+            },
+            "simon": {
+              "password": "Welcome1",
+              "roles": [
+                "Editor"
+              ]
+            }
+          }
+        },
+        "[production]": {
+          "kind": "xsuaa"
+        }
+      },
+      "[production]": {
+        "auth": {
+          "kind": "xsuaa"
+        }
+      }
+    }
+  }
+}
