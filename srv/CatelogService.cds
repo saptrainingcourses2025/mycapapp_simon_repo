@@ -12,7 +12,6 @@ service CatelogService @(path: 'CatelogService', requires: 'authenticated-user')
     @readonly
     entity StatusCode as projection on master.StatusCode; 
     @Capabilities : { Deletable: false }
-    // @odata.draft.enabled: true
     entity PurchaseOrderSet@(
         // restrict: [
         //                                 { grant: ['READ'], to: 'Viewer' },
