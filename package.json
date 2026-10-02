@@ -55,19 +55,19 @@
             "tyson": {
               "password": "Welcome1",
               "roles": [
-                "Viewer"
+                "Display",
+                "Edit"
               ],
               "attr": {
                 "bankNameFilter": [
-                  "My Bank of San Francisco",
                   "My Bank of London"
                 ]
               }
             },
             "simon": {
-              "password": "Welcome1",
+              "password": "Welcome2",
               "roles": [
-                "Editor"
+                "Edit"
               ]
             }
           }

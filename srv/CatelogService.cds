@@ -3,8 +3,9 @@ using { tyson.db.master, tyson.db.transaction } from '../db/datamodel';
 service CatelogService @(path: 'CatelogService', requires: 'authenticated-user') {
     
     entity EmployeeSet@(restrict: [
-                                    { grant: ['READ'], to: 'Viewer', where: 'bankName = $user.bankNameFilter' },
-                                    { grant: ['WRITE','DELETE'], to: 'Editor' }
+                                    {grant:['READ'], to:'Display', 
+                                        where: 'bankName = $user.bankNameFilter'},
+                                    {grant: ['WRITE','DELETE'], to: 'Edit'}
                                 ]) as projection on master.employees; 
     entity ProductSet as projection on master.product; 
     entity BusinessPartnerSet as projection on master.businesspartner; 
@@ -12,11 +13,10 @@ service CatelogService @(path: 'CatelogService', requires: 'authenticated-user')
     @readonly
     entity StatusCode as projection on master.StatusCode; 
     @Capabilities : { Deletable: false }
-    entity PurchaseOrderSet@(
-        // restrict: [
-        //                                 { grant: ['READ'], to: 'Viewer' },
-        //                                 { grant: ['WRITE','DELETE'], to: 'Editor' }
-        //                             ],
+    entity PurchaseOrderSet@(restrict: [
+                                        { grant: ['READ'], to: 'Display' },
+                                        { grant: ['WRITE','DELETE'], to: 'Edit' }
+                                    ],
                                 odata.draft.enabled: true,
                                 Common.DefaultValuesFunction : 'getDefaultValues') as projection on transaction.purchaseorder{
         *,

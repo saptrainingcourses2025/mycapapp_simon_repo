@@ -35,6 +35,7 @@ http://localhost:4004/odata/v4/CatelogService/EmployeeSet?$orderby=salaryAmount 
 
 ###Load all the Purchaseorder
 http://localhost:4004/odata/v4/CatelogService/PurchaseOrderSet
+Authorization: Basic tyson:Welcome1
 
 ###Get single Purchaseorder
 http://localhost:4004/odata/v4/CatelogService/PurchaseOrderSet/74867AD200E41EDBA5D8B0C98DC2C052
