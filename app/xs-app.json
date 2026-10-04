@@ -1,28 +1,35 @@
 {
-  "welcomeFile": "managepo/webapp/index.html",
-  "authenticationMethod": "route",
-  "sessionTimeout": 10,
-  "routes": [
-    {
-      "source": "^/managepo/webapp/(.*)",
-      "localDir": "managepo/webapp",
-      "target": "$1",
-      "authenticationType": "xsuaa",
-      "csrfProtection": true
-    },
-    {
-      "source": "^/user-api/currentUser$",
-      "target": "/currentUser",
-      "service": "sap-approuter-userapi"
-    },
-    {
-      "source": "^/(.*)$",
-      "authenticationType": "xsuaa",
-      "destination": "srv-api"
-     }
-  ],
-  "logout": {
-     "logoutEndpoint": "/my/logout",
-     "logoutPage": "https://www.google.com"
+ "welcomeFile": "managepo/webapp/index.html",
+ "authenticationMethod": "route",
+ "sessionTimeout": 10,
+ "routes": [
+  {
+   "source": "^/-/cds/.*",
+   "destination": "mtx-api",
+   "authenticationType": "none"
+  },
+  {
+   "source": "^/managepo/webapp/(.*)",
+   "localDir": "managepo/webapp",
+   "target": "$1",
+   "authenticationType": "xsuaa",
+   "csrfProtection": true
+  },
+  {
+   "source": "^/user-api/currentUser$",
+   "target": "/currentUser",
+   "service": "sap-approuter-userapi"
+  },
+  {
+   "source": "^/(.*)$",
+   "authenticationType": "xsuaa",
+   "destination": "srv-api",
+   "target": "$1",
+   "csrfProtection": true
   }
+ ],
+ "logout": {
+  "logoutEndpoint": "/my/logout",
+  "logoutPage": "https://www.google.com"
+ }
 }
