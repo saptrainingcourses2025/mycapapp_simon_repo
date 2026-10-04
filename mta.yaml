@@ -1,90 +1,133 @@
 _schema-version: 3.3.0
 ID: mycapapp
+description: A Simple CAP Project
 version: 1.0.0
-description: "A Simple CAP Project"
+modules:
+- name: mycapapp-ui
+  type: nodejs
+  path: app
+  requires:
+  - name: mycapapp-auth
+  - name: srv-api
+    group: destinations
+    properties:
+      forwardAuthToken: true
+      name: srv-api
+      strictSSL: true
+      url: ~{srv-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    instances: 1
+  build-parameters:
+    builder: npm-ci
+- name: mycapapp-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: mycapapp-auth
+  - name: mycapapp-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    instances: 1
+  build-parameters:
+    builder: npm-ci
+- name: mycapapp-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: mycapapp-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: mycapapp-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: mycapapp-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - simonpopoanalytics.zip
+      name: simonpopoanalytics
+      target-path: resources/
+- name: simonpopoanalytics
+  type: html5
+  path: app/poanalytics
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: mycapapp-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      oauth2-configuration:
+        credential-types:
+        - binding-secret
+        - x509
+      role-collections:
+      - description: generated
+        name: Viewer (mycapapp ${org}-${space})
+        role-template-references:
+        - $XSAPPNAME.Viewer
+      - description: generated
+        name: Editor (mycapapp ${org}-${space})
+        role-template-references:
+        - $XSAPPNAME.Editor
+      - description: generated
+        name: userattributes (mycapapp ${org}-${space})
+        role-template-references:
+        - $XSAPPNAME.userattributes
+      tenant-mode: dedicated
+      xsappname: mycapapp-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: mycapapp-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: mycapapp-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: mycapapp-html5-service
+    service-plan: app-host
+- name: mycapapp-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: mycapapp-destination-service
+    service-plan: lite
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx cds build --production
-modules:
-
-###Manually adding UI Module = Fiori + Ui App router
-  - name: mycapapp-ui
-    type: nodejs
-    path: app
-    parameters:
-      instances: 1
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm-ci
-    requires:
-      - name: mycapapp-auth
-      - name: srv-api
-        group: destinations
-        properties:
-          name: srv-api
-          strictSSL: true
-          forwardAuthToken: true
-          url: '~{srv-url}'
-### End of the add code
-
-  - name: mycapapp-srv
-    type: nodejs
-    path: gen/srv
-    parameters:
-      instances: 1
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm-ci
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
-    requires:
-      - name: mycapapp-auth
-      - name: mycapapp-db
-
-  - name: mycapapp-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: mycapapp-db
-
-resources:
-  - name: mycapapp-auth
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: xsuaa
-      service-plan: application
-      path: ./xs-security.json
-      config:
-        xsappname: mycapapp-${org}-${space}
-        tenant-mode: dedicated
-        oauth2-configuration:
-          credential-types:
-            - "binding-secret"
-            - "x509"
-        role-collections:
-          - name: 'Viewer (mycapapp ${org}-${space})'
-            description: 'generated'
-            role-template-references:
-              - '$XSAPPNAME.Viewer'
-          - name: 'Editor (mycapapp ${org}-${space})'
-            description: 'generated'
-            role-template-references:
-              - '$XSAPPNAME.Editor'
-          - name: 'userattributes (mycapapp ${org}-${space})'
-            description: 'generated'
-            role-template-references:
-              - '$XSAPPNAME.userattributes'
-  - name: mycapapp-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production

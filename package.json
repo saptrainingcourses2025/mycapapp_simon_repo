@@ -15,7 +15,9 @@
   "devDependencies": {
     "@cap-js/sqlite": "^3.1.1",
     "@sap/cds-dk": "^10",
-    "cds-plugin-ui5": "^0.17.0"
+    "cds-plugin-ui5": "^0.17.0",
+    "rimraf": "^5.0.5",
+    "mbt": "^1.2.49"
   },
   "keywords": [
     "Nodejs",
@@ -29,14 +31,19 @@
   "scripts": {
     "start": "cds-serve",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch-managepo": "cds watch --open tyson.ui.managepo/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-managepo": "cds watch --open tyson.ui.managepo/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-poanalytics": "cds watch --open simon.po.poanalytics/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "undeploy": "cf undeploy mycapapp --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
   "private": true,
   "workspaces": [
     "app/*"
   ],
   "sapux": [
-    "app/managepo"
+    "app/managepo",
+    "app/poanalytics"
   ],
   "cds": {
     "requires": {
