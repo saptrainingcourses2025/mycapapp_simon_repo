@@ -4,10 +4,11 @@
   "description": "A Simple CAP Project",
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1.16.1",
+    "@cap-js/attachments": "^4.0.0",
     "@cap-js/hana": "^3",
     "@sap/cds": "^10.1.1",
-    "express": "^5.2.1",
-    "@sap/xssec": "^4"
+    "@sap/xssec": "^4",
+    "express": "^5.2.1"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^3.1.1",
