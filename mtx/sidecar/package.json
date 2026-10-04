@@ -1,6 +1,8 @@
 {
   "name": "mycapapp-mtx",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1146.0",
+    "@aws-sdk/lib-storage": "^3.1146.0",
     "@cap-js/hana": "^3",
     "@sap/cds": "^10",
     "@sap/cds-mtxs": "^4",

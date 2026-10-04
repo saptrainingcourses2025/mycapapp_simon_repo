@@ -18,10 +18,10 @@ modules:
     parameters:
       instances: 1
       buildpack: nodejs_buildpack
-    properties:
-      TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
     build-parameters:
       builder: npm-ci
+    properties:
+      TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
     requires:
       - name: mycapapp-auth
       - name: srv-api
@@ -57,12 +57,14 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: mycapapp-auth
+      - name: mycapapp-db
 
   - name: mycapapp-mtx
     type: nodejs
     path: gen/mtx/sidecar
     requires:
       - name: mycapapp-auth
+      - name: mycapapp-db
       - name: mycapapp-registry
       - name: app-api
         properties:
