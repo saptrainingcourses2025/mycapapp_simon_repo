@@ -55,6 +55,7 @@
           "kind": "mocked",
           "users": {
             "tyson": {
+              "tenant": "t1", 
               "password": "Welcome1",
               "roles": [
                 "Display",
@@ -67,10 +68,17 @@
               }
             },
             "simon": {
+              "tenant": "t2",
               "password": "Welcome2",
               "roles": [
+                "Display",
                 "Edit"
-              ]
+              ],
+              "attr": {
+                "bankNameFilter": [
+                  "My Bank of London"
+                ]
+              }
             }
           }
         },

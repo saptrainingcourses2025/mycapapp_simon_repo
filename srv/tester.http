@@ -17,6 +17,7 @@ http://localhost:4004/odata/v4/CatelogService/EmployeeSet?$select=ID,nameFirst,n
 
 ###Count the records
 http://localhost:4004/odata/v4/CatelogService/EmployeeSet/$count
+Authorization: Basic tyson:Welcome1
 
 ###pagination 
 http://localhost:4004/odata/v4/CatelogService/EmployeeSet?$top=2&$skip=2
@@ -137,3 +138,18 @@ Content-Type: application/json
 
 ###Check the Before boosting the GROSS_AMOUNT
 http://localhost:4004/odata/v4/CatelogService/PurchaseOrderSet
+
+
+###Change data - Multitenancy Testing 
+PATCH http://localhost:4004/odata/v4/CatelogService/EmployeeSet/02BD2137-0890-1EEA-A6C2-BB55C198A7FB
+Authorization: Basic tyson:Welcome1
+Content-Type: application/json
+
+{
+  "salaryAmount": "30000"
+}
+
+#### Get teh employee - Multitenancy Testing 
+http://localhost:4004/odata/v4/CatelogService/EmployeeSet/02BD2137-0890-1EEA-A6C2-BB55C198A7FB
+# Authorization: Basic tyson:Welcome1
+Authorization: Basic simon:Welcome2
